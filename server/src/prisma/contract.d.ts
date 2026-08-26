@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'0278ecb3e489339c65a9ccab3909073da513a76337b8b331f25f78498b3f8dea'>;
+  StorageHashBase<'3a80d10f5d84390a3f98ef00c80a462e26eab976b961ea725225ee13501b478a'>;
 export type ExecutionHash =
   ExecutionHashBase<'a499031370d1fd1891ca11072d3f7e11be752b686057f7c6d0900ee0159f4ed0'>;
 export type ProfileHash =
@@ -249,14 +249,14 @@ export type FieldOutputTypes = {
     };
     readonly Complaint: {
       readonly id: CodecTypes['pg/int4@1']['output'];
-      readonly category: CodecTypes['pg/text@1']['output'];
+      readonly title: CodecTypes['pg/text@1']['output'];
       readonly description: CodecTypes['pg/text@1']['output'];
       readonly status: CodecTypes['pg/text@1']['output'];
       readonly studentId: CodecTypes['pg/int4@1']['output'];
     };
     readonly FoodMenu: {
       readonly id: CodecTypes['pg/int4@1']['output'];
-      readonly date: CodecTypes['pg/text@1']['output'];
+      readonly day: CodecTypes['pg/text@1']['output'];
       readonly breakfast: CodecTypes['pg/text@1']['output'];
       readonly lunch: CodecTypes['pg/text@1']['output'];
       readonly snacks: CodecTypes['pg/text@1']['output'];
@@ -309,14 +309,14 @@ export type FieldInputTypes = {
     };
     readonly Complaint: {
       readonly id: CodecTypes['pg/int4@1']['input'];
-      readonly category: CodecTypes['pg/text@1']['input'];
+      readonly title: CodecTypes['pg/text@1']['input'];
       readonly description: CodecTypes['pg/text@1']['input'];
       readonly status: CodecTypes['pg/text@1']['input'];
       readonly studentId: CodecTypes['pg/int4@1']['input'];
     };
     readonly FoodMenu: {
       readonly id: CodecTypes['pg/int4@1']['input'];
-      readonly date: CodecTypes['pg/text@1']['input'];
+      readonly day: CodecTypes['pg/text@1']['input'];
       readonly breakfast: CodecTypes['pg/text@1']['input'];
       readonly lunch: CodecTypes['pg/text@1']['input'];
       readonly snacks: CodecTypes['pg/text@1']['input'];
@@ -368,15 +368,15 @@ export type StorageColumnTypes = {
       readonly studentId: CodecTypes['pg/int4@1']['output'];
     };
     readonly complaint: {
-      readonly category: CodecTypes['pg/text@1']['output'];
       readonly description: CodecTypes['pg/text@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly status: CodecTypes['pg/text@1']['output'];
       readonly studentId: CodecTypes['pg/int4@1']['output'];
+      readonly title: CodecTypes['pg/text@1']['output'];
     };
     readonly foodMenu: {
       readonly breakfast: CodecTypes['pg/text@1']['output'];
-      readonly date: CodecTypes['pg/text@1']['output'];
+      readonly day: CodecTypes['pg/text@1']['output'];
       readonly dinner: CodecTypes['pg/text@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly lunch: CodecTypes['pg/text@1']['output'];
@@ -428,15 +428,15 @@ export type StorageColumnInputTypes = {
       readonly studentId: CodecTypes['pg/int4@1']['input'];
     };
     readonly complaint: {
-      readonly category: CodecTypes['pg/text@1']['input'];
       readonly description: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly status: CodecTypes['pg/text@1']['input'];
       readonly studentId: CodecTypes['pg/int4@1']['input'];
+      readonly title: CodecTypes['pg/text@1']['input'];
     };
     readonly foodMenu: {
       readonly breakfast: CodecTypes['pg/text@1']['input'];
-      readonly date: CodecTypes['pg/text@1']['input'];
+      readonly day: CodecTypes['pg/text@1']['input'];
       readonly dinner: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly lunch: CodecTypes['pg/text@1']['input'];
@@ -525,7 +525,7 @@ type ContractBase = Omit<
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [];
+              uniques: readonly [{ readonly columns: readonly ['studentId', 'date'] }];
               indexes: readonly [
                 {
                   readonly name: 'attendance_studentId_idx_bf255322';
@@ -560,7 +560,7 @@ type ContractBase = Omit<
                     readonly expression: 'autoincrement()';
                   };
                 };
-                readonly category: {
+                readonly title: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
@@ -576,7 +576,7 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly default: {
                     readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/text@1', 'Pending'>;
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'PENDING'>;
                   };
                 };
                 readonly studentId: {
@@ -621,7 +621,7 @@ type ContractBase = Omit<
                     readonly expression: 'autoincrement()';
                   };
                 };
-                readonly date: {
+                readonly day: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
@@ -648,7 +648,7 @@ type ContractBase = Omit<
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [{ readonly columns: readonly ['date'] }];
+              uniques: readonly [{ readonly columns: readonly ['day'] }];
               indexes: readonly [];
               foreignKeys: readonly [];
             };
@@ -970,7 +970,7 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
-              readonly category: {
+              readonly title: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
@@ -1005,7 +1005,7 @@ type ContractBase = Omit<
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
-                readonly category: { readonly column: 'category' };
+                readonly title: { readonly column: 'title' };
                 readonly description: { readonly column: 'description' };
                 readonly status: { readonly column: 'status' };
                 readonly studentId: { readonly column: 'studentId' };
@@ -1018,7 +1018,7 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
-              readonly date: {
+              readonly day: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
@@ -1045,7 +1045,7 @@ type ContractBase = Omit<
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
-                readonly date: { readonly column: 'date' };
+                readonly day: { readonly column: 'day' };
                 readonly breakfast: { readonly column: 'breakfast' };
                 readonly lunch: { readonly column: 'lunch' };
                 readonly snacks: { readonly column: 'snacks' };

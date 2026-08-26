@@ -106,13 +106,6 @@
           },
           "Complaint": {
             "fields": {
-              "category": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
-              },
               "description": {
                 "nullable": false,
                 "type": {
@@ -140,6 +133,13 @@
                   "codecId": "pg/int4@1",
                   "kind": "scalar"
                 }
+              },
+              "title": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
               }
             },
             "relations": {
@@ -161,9 +161,6 @@
             },
             "storage": {
               "fields": {
-                "category": {
-                  "column": "category"
-                },
                 "description": {
                   "column": "description"
                 },
@@ -175,6 +172,9 @@
                 },
                 "studentId": {
                   "column": "studentId"
+                },
+                "title": {
+                  "column": "title"
                 }
               },
               "namespaceId": "public",
@@ -190,7 +190,7 @@
                   "kind": "scalar"
                 }
               },
-              "date": {
+              "day": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
@@ -232,8 +232,8 @@
                 "breakfast": {
                   "column": "breakfast"
                 },
-                "date": {
-                  "column": "date"
+                "day": {
+                  "column": "day"
                 },
                 "dinner": {
                   "column": "dinner"
@@ -759,15 +759,17 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "studentId",
+                    "date"
+                  ]
+                }
+              ]
             },
             "complaint": {
               "columns": {
-                "category": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": false
-                },
                 "description": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -786,7 +788,7 @@
                   "codecId": "pg/text@1",
                   "default": {
                     "kind": "literal",
-                    "value": "Pending"
+                    "value": "PENDING"
                   },
                   "nativeType": "text",
                   "nullable": false
@@ -794,6 +796,11 @@
                 "studentId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "title": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 }
               },
@@ -839,7 +846,7 @@
                   "nativeType": "text",
                   "nullable": false
                 },
-                "date": {
+                "day": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
@@ -879,7 +886,7 @@
               "uniques": [
                 {
                   "columns": [
-                    "date"
+                    "day"
                   ]
                 }
               ]
@@ -1188,7 +1195,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "0278ecb3e489339c65a9ccab3909073da513a76337b8b331f25f78498b3f8dea"
+    "storageHash": "3a80d10f5d84390a3f98ef00c80a462e26eab976b961ea725225ee13501b478a"
   },
   "execution": {
     "executionHash": "a499031370d1fd1891ca11072d3f7e11be752b686057f7c6d0900ee0159f4ed0",
