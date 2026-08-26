@@ -1,0 +1,83 @@
+// use prisma-next
+
+model User {
+  id        Int    @id @default(autoincrement())
+  name      String
+  email     String @unique
+  password  String
+  role      String   // student | warden
+
+  student   Student?
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+model Student {
+  id          Int    @id @default(autoincrement())
+  rollNumber  String @unique
+  branch      String
+  year        Int
+
+  userId      Int @unique
+  user        User @relation(fields: [userId], references: [id])
+
+  roomId      Int?
+  room        Room? @relation(fields: [roomId], references: [id])
+
+  outings     Outing[]
+  complaints  Complaint[]
+  attendance  Attendance[]
+}
+
+model Room {
+  id          Int @id @default(autoincrement())
+  roomNumber  String @unique
+  block       String
+  floor       Int
+  capacity    Int
+  occupied    Int
+
+  students    Student[]
+}
+
+model Outing {
+  id          Int @id @default(autoincrement())
+  destination String
+  reason      String
+  outingDate  String
+  outTime     String
+  inTime      String
+  status      String @default("Pending")
+
+  studentId   Int
+  student     Student @relation(fields: [studentId], references: [id])
+}
+
+model Complaint {
+  id          Int @id @default(autoincrement())
+  category    String
+  description String
+  status      String @default("Pending")
+
+  studentId   Int
+  student     Student @relation(fields: [studentId], references: [id])
+}
+
+model Attendance {
+  id          Int @id @default(autoincrement())
+  date        String
+  status      String
+
+  studentId   Int
+  student     Student @relation(fields: [studentId], references: [id])
+}
+
+model FoodMenu {
+  id          Int @id @default(autoincrement())
+  date        String @unique
+  breakfast   String
+  lunch       String
+  snacks      String
+  dinner      String
+}
