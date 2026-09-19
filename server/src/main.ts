@@ -19,6 +19,21 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(process.env.PORT ?? 3000);
+  const port = Number(process.env.PORT ?? 3000);
+  try {
+    await app.listen(port);
+  } catch (err: any) {
+    if (err?.code === 'EADDRINUSE') {
+      console.error(
+        `[Bootstrap] Port ${port} already in use (EADDRINUSE). ` +
+          `Kill the existing process: npx --yes kill-port ${port}  or  taskkill /PID <pid> /F  (Windows) / lsof -ti:${port} | xargs kill (macOS/Linux), then restart.`,
+      );
+      process.exit(1);
+    }
+    throw err;
+  }
 }
-bootstrap();
+bootstrap().catch((err) => {
+  console.error('[Bootstrap] Failed to start:', err);
+  process.exit(1);
+});

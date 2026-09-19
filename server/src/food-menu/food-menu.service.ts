@@ -21,6 +21,12 @@ export class FoodMenuService {
     return this.prisma.client.orm.public.FoodMenu.all();
   }
 
+  async findByDay(day: string) {
+    const normalized = (day || '').trim().toUpperCase();
+    if (!normalized) return null;
+    return this.prisma.client.orm.public.FoodMenu.where({ day: normalized }).first();
+  }
+
   async findOne(id: number) {
     const menu = await this.prisma.client.orm.public.FoodMenu.where({ id }).first();
     if (!menu) throw new NotFoundException(`Food menu #${id} not found`);

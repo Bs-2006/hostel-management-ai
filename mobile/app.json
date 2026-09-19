@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "mobile",
+    "slug": "mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "scheme": "mobile",
+    "newArchEnabled": true,
+    "plugins": [
+      "expo-router",
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "Allow mobile to use the microphone for voice input.",
+          "speechRecognitionPermission": "Allow mobile to use speech recognition for voice input."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow mobile to access your photos to attach them to the AI chat.",
+          "cameraPermission": "Allow mobile to use your camera to attach photos to the AI chat."
+        }
+      ]
+    ],
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}

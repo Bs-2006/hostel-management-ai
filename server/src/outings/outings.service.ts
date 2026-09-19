@@ -15,7 +15,7 @@ export class OutingsService {
     const db = this.prisma.client;
 
     // Must be a student
-    if (requestingUser.role !== 'student') {
+    if (this.normalizeRole(requestingUser.role) !== 'STUDENT') {
       throw new ForbiddenException('Only students can create outing requests');
     }
 
@@ -33,7 +33,7 @@ export class OutingsService {
   async findAll(requestingUser: { sub: number; role: string }) {
     const db = this.prisma.client;
 
-    if (requestingUser.role === 'warden') {
+    if (this.normalizeRole(requestingUser.role) === 'WARDEN') {
       return db.orm.public.Outing.all();
     }
 
@@ -44,12 +44,40 @@ export class OutingsService {
     return db.orm.public.Outing.where({ studentId: student.id }).all();
   }
 
+  /**
+   * Returns all outings (WARDEN only), each enriched with the requesting
+   * student's name and student ID so the agent can present them clearly.
+   */
+  async findAllWithStudents(requestingUser: { sub: number; role: string }) {
+    const db = this.prisma.client;
+    const outings = await this.findAll(requestingUser);
+
+    return Promise.all(
+      outings.map(async (o) => {
+        const student = await db.orm.public.Student.where({ id: o.studentId }).first();
+        const user = student
+          ? await db.orm.public.User.where({ id: student.userId }).first()
+          : null;
+        return {
+          ...o,
+          student: student
+            ? { id: student.id, name: user?.name ?? null, email: user?.email ?? null }
+            : null,
+        };
+      }),
+    );
+  }
+
+  private normalizeRole(role: string): string {
+    return String(role).trim().toUpperCase();
+  }
+
   async findOne(id: number, requestingUser: { sub: number; role: string }) {
     const db = this.prisma.client;
     const outing = await db.orm.public.Outing.where({ id }).first();
     if (!outing) throw new NotFoundException(`Outing #${id} not found`);
 
-    if (requestingUser.role === 'student') {
+    if (this.normalizeRole(requestingUser.role) === 'STUDENT') {
       const student = await db.orm.public.Student.where({ userId: requestingUser.sub }).first();
       if (!student || outing.studentId !== student.id) {
         throw new ForbiddenException('You can only view your own outing requests');

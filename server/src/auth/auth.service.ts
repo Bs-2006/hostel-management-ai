@@ -56,9 +56,13 @@ export class AuthService {
       });
     }
 
+    const student = user.role === 'student'
+      ? await db.orm.public.Student.where({ userId: user.id }).first()
+      : null;
+
     const token = this.signToken(user.id, user.email, user.role);
     const { password: _pw, ...safeUser } = user;
-    return { token, user: safeUser };
+    return { token, user: { ...safeUser, student } };
   }
 
   async login(dto: LoginDto) {

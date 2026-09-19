@@ -57,7 +57,23 @@ export class StudentsService {
     const student = await db.orm.public.Student.where({ id }).first();
     if (!student) throw new NotFoundException(`Student #${id} not found`);
 
+    // Delete dependent records first to satisfy foreign-key constraints.
+    await db.orm.public.Outing.where({ studentId: id }).delete();
+    await db.orm.public.Complaint.where({ studentId: id }).delete();
+    await db.orm.public.Attendance.where({ studentId: id }).delete();
+
+    // Decrement the previously assigned room's occupied count.
+    if (student.roomId) {
+      const occupants = await db.orm.public.Student.where({ roomId: student.roomId }).all();
+      await db.orm.public.Room.where({ id: student.roomId }).update({
+        occupied: Math.max(0, occupants.length - 1),
+      });
+    }
+
+    // Delete the student record, then their associated user account.
     await db.orm.public.Student.where({ id }).delete();
+    await db.orm.public.User.where({ id: student.userId }).delete();
+
     return { message: `Student #${id} deleted` };
   }
 

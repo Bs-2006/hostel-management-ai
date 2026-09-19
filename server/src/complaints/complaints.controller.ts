@@ -47,6 +47,16 @@ export class ComplaintsController {
     return this.complaintsService.findAll();
   }
 
+  // GET /complaints/my — student only (their own complaints)
+  @ApiOperation({ summary: 'Get the current student\'s complaints (student only)' })
+  @ApiOkResponse({ description: 'List of complaints submitted by the current student' })
+  @ApiUnauthorizedResponse({ description: 'Missing or invalid token' })
+  @ApiForbiddenResponse({ description: 'Student role required' })
+  @Get('my')
+  findMine(@Req() req: Request) {
+    return this.complaintsService.findMine((req as any).user);
+  }
+
   // GET /complaints/:id — warden only
   @Roles('warden')
   @ApiOperation({ summary: 'Get a complaint by ID (warden only)' })

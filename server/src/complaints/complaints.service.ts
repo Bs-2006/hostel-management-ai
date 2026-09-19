@@ -39,6 +39,19 @@ export class ComplaintsService {
     );
   }
 
+  async findMine(requestingUser: { sub: number; role: string }) {
+    if (requestingUser.role !== 'student') {
+      throw new ForbiddenException('Only students can list their own complaints');
+    }
+
+    const db = this.prisma.client;
+    const student = await db.orm.public.Student.where({ userId: requestingUser.sub }).first();
+    if (!student) throw new NotFoundException('Student profile not found for this user');
+
+    const complaints = await db.orm.public.Complaint.where({ studentId: student.id }).all();
+    return complaints.map((c) => ({ ...c, student }));
+  }
+
   async findOne(id: number) {
     const db = this.prisma.client;
     const complaint = await db.orm.public.Complaint.where({ id }).first();
